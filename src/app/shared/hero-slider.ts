@@ -19,9 +19,9 @@ export interface Slide {
       role="region"
       aria-roledescription="carousel"
       aria-label="Featured collections"
-      (mouseenter)="interacting.set(true)"
-      (mouseleave)="interacting.set(false)"
-      (focusin)="interacting.set(true)"
+      (mouseenter)="hovering.set(true)"
+      (mouseleave)="hovering.set(false)"
+      (focusin)="focused.set(true)"
       (focusout)="onFocusOut($event)"
     >
       <div class="mb-3 flex items-center justify-end">
@@ -46,25 +46,26 @@ export interface Slide {
         </button>
       </div>
 
-      <div class="relative overflow-hidden" aria-live="off">
+      <div class="relative" aria-live="off">
         @for (slide of slides(); track slide.title; let i = $index) {
           @if (i === index()) {
             <div
               role="group"
               aria-roledescription="slide"
               [attr.aria-label]="i + 1 + ' of ' + slides().length"
-              class="grid min-h-[460px] items-center gap-6 p-8 md:grid-cols-2 md:p-14"
+              class="fade-in grid min-h-[460px] items-center gap-6 overflow-hidden p-8 md:grid-cols-2 md:p-14"
               [style.background]="panelBackground(slide.panel)"
               [style.color]="panelColor(slide.panel)"
+              [style.border-radius]="'var(--radius-lg)'"
             >
               <div class="max-w-md">
-                <p class="text-sm font-medium" style="opacity: 0.82">{{ slide.kicker }}</p>
+                <p class="text-sm font-medium" style="opacity: 0.85">{{ slide.kicker }}</p>
                 <h2
                   class="mt-3 font-display text-4xl font-extrabold leading-[1.02] tracking-tight sm:text-5xl"
                 >
                   {{ slide.title }}
                 </h2>
-                <p class="mt-4 max-w-sm text-base" style="opacity: 0.9">{{ slide.line }}</p>
+                <p class="mt-4 max-w-sm text-base" style="opacity: 0.92">{{ slide.line }}</p>
                 <a
                   [href]="slide.href"
                   class="btn mt-7"
@@ -87,7 +88,7 @@ export interface Slide {
       </div>
 
       <div class="mt-4 flex items-center justify-between">
-        <div class="flex items-center gap-2" role="group" aria-label="Choose slide">
+        <div class="flex items-center gap-1" role="group" aria-label="Choose slide">
           @for (slide of slides(); track slide.title; let i = $index) {
             <button
               type="button"
@@ -97,8 +98,9 @@ export interface Slide {
               (click)="goTo(i)"
             >
               <span
-                class="h-2.5 w-2.5"
+                class="h-2.5 w-2.5 rounded-full transition-all"
                 [style.background]="i === index() ? 'var(--accent)' : 'var(--line)'"
+                [style.width]="i === index() ? '24px' : '10px'"
               ></span>
             </button>
           }
@@ -110,17 +112,7 @@ export interface Slide {
             (click)="prev()"
             aria-label="Previous slide"
           >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="m15 18-6-6 6-6" />
             </svg>
           </button>
@@ -130,17 +122,7 @@ export interface Slide {
             (click)="next()"
             aria-label="Next slide"
           >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="m9 18 6-6-6-6" />
             </svg>
           </button>
@@ -155,9 +137,19 @@ export class HeroSlider {
   readonly index = signal(0);
   readonly playing = signal(true);
   readonly reduceMotion = signal(false);
-  readonly interacting = signal(false);
+  readonly hovering = signal(false);
+  readonly focused = signal(false);
+  /** Bumped on manual navigation so the autoplay timer restarts from zero. */
+  readonly resetTick = signal(0);
 
   private timer: ReturnType<typeof setInterval> | null = null;
+
+  // Fixed brand panels (theme-independent) so contrast holds in light and dark.
+  private static readonly PANELS: Record<Slide['panel'], { bg: string; fg: string }> = {
+    accent: { bg: '#0f6e5c', fg: '#ffffff' },
+    ink: { bg: '#1a1a18', fg: '#ffffff' },
+    sand: { bg: '#e7e0d3', fg: '#1a1a18' },
+  };
 
   constructor() {
     const destroyRef = inject(DestroyRef);
@@ -170,9 +162,13 @@ export class HeroSlider {
 
     effect(() => {
       const count = this.slides().length;
-      const shouldPlay = this.playing() && !this.reduceMotion() && !this.interacting();
+      // Reading resetTick re-subscribes this effect so a manual nav restarts the timer.
+      void this.resetTick();
+      const paused =
+        this.hovering() || this.focused() || !this.playing() || this.reduceMotion();
+
       this.stopTimer();
-      if (shouldPlay && count > 1) {
+      if (!paused && count > 1) {
         this.timer = setInterval(() => this.index.update((i) => (i + 1) % count), 6000);
       }
     });
@@ -191,6 +187,7 @@ export class HeroSlider {
   goTo(index: number): void {
     const count = this.slides().length;
     this.index.set(((index % count) + count) % count);
+    this.resetTick.update((value) => value + 1);
   }
 
   toggle(): void {
@@ -200,18 +197,8 @@ export class HeroSlider {
   onFocusOut(event: FocusEvent): void {
     const next = event.relatedTarget as Node | null;
     const current = event.currentTarget as HTMLElement;
-    if (!next || !current.contains(next)) this.interacting.set(false);
+    if (!next || !current.contains(next)) this.focused.set(false);
   }
-
-  // Fixed brand panels (theme-independent) so contrast holds in light and dark.
-  private static readonly PANELS: Record<
-    Slide['panel'],
-    { bg: string; fg: string }
-  > = {
-    accent: { bg: '#0f6e5c', fg: '#ffffff' },
-    ink: { bg: '#1a1a18', fg: '#ffffff' },
-    sand: { bg: '#e7e0d3', fg: '#1a1a18' },
-  };
 
   panelBackground(panel: Slide['panel']): string {
     return HeroSlider.PANELS[panel].bg;

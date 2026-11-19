@@ -7,7 +7,10 @@ import { Product } from '../core/models';
   imports: [RouterLink],
   template: `
     <a [routerLink]="['/product', product().id]" class="group block">
-      <div class="relative aspect-[4/5] overflow-hidden" style="background: var(--tile)">
+      <div
+        class="relative aspect-[4/5] overflow-hidden rounded-2xl transition-all duration-200 ease-out group-hover:-translate-y-1 group-hover:shadow-xl"
+        style="background: var(--tile)"
+      >
         <img
           [src]="product().thumbnail"
           [alt]="product().title"
@@ -15,7 +18,7 @@ import { Product } from '../core/models';
           decoding="async"
           width="300"
           height="375"
-          class="h-full w-full object-contain p-6 transition-transform duration-200 ease-out group-hover:scale-[1.03]"
+          class="h-full w-full object-contain p-6 transition-transform duration-200 ease-out group-hover:scale-[1.04]"
         />
         @if (badge(); as label) {
           <span class="badge absolute left-3 top-3">{{ label }}</span>

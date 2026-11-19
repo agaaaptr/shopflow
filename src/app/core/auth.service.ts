@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { AuthUser, LoginResponse } from './models';
 
-const TOKEN_KEY = 'shopease-token';
-const USER_KEY = 'shopease-user';
+const TOKEN_KEY = 'shopflow-token';
+const USER_KEY = 'shopflow-user';
 const LOGIN_URL = 'https://dummyjson.com/auth/login';
 
 @Injectable({ providedIn: 'root' })

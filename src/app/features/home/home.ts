@@ -1,4 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { map } from 'rxjs';
 import { ProductService } from '../../core/product.service';
 import { Product } from '../../core/models';
 import { Navbar } from '../../shared/navbar';
@@ -23,13 +26,20 @@ const CDN = 'https://cdn.dummyjson.com/product-images';
 
 @Component({
   selector: 'app-home',
-  imports: [Navbar, Footer, HeroSlider, ProductCard],
+  imports: [Navbar, Footer, HeroSlider, ProductCard, RouterLink],
   templateUrl: './home.html',
 })
 export class Home {
   private readonly products = inject(ProductService);
+  private readonly route = inject(ActivatedRoute);
+
   readonly list = this.products.list;
   readonly skeletons = [1, 2, 3, 4, 5, 6, 7, 8];
+
+  readonly query = toSignal(
+    this.route.queryParamMap.pipe(map((params) => (params.get('q') ?? '').trim().toLowerCase())),
+    { initialValue: '' },
+  );
 
   readonly slides: Slide[] = [
     {
@@ -64,13 +74,21 @@ export class Home {
     },
   ];
 
-  readonly featured = computed<Product[]>(() =>
-    this.list
+  readonly featured = computed<Product[]>(() => {
+    const q = this.query();
+    return this.list
       .value()
       .products.filter((product) => FASHION_CATEGORIES.has(product.category))
+      .filter(
+        (product) =>
+          !q ||
+          product.title.toLowerCase().includes(q) ||
+          (product.brand ?? '').toLowerCase().includes(q) ||
+          product.category.replace(/-/g, ' ').includes(q),
+      )
       .sort((a, b) => b.rating - a.rating || a.title.localeCompare(b.title))
-      .slice(0, 12),
-  );
+      .slice(0, 12);
+  });
 
   reload(): void {
     this.list.reload();

@@ -25,7 +25,7 @@ describe('AuthService', () => {
   });
 
   it('seeds a persisted token from localStorage', () => {
-    localStorage.setItem('shopease-token', 'persisted-token');
+    localStorage.setItem('shopflow-token', 'persisted-token');
     setup();
     expect(service.isAuthenticated()).toBe(true);
   });
@@ -54,10 +54,10 @@ describe('AuthService', () => {
   });
 
   it('clears the session on logout', () => {
-    localStorage.setItem('shopease-token', 'persisted-token');
+    localStorage.setItem('shopflow-token', 'persisted-token');
     setup();
     service.logout();
     expect(service.isAuthenticated()).toBe(false);
-    expect(localStorage.getItem('shopease-token')).toBeNull();
+    expect(localStorage.getItem('shopflow-token')).toBeNull();
   });
 });

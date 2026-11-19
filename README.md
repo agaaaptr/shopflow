@@ -1,4 +1,4 @@
-# ShopEase — Angular e-commerce demo
+# ShopFlow — Angular e-commerce demo
 
 A small, polished e-commerce front-end built for a front-end technical assessment. Three screens — sign-in, home (hero slider + product grid), and product detail — on Angular 22 + Tailwind CSS v4, with all data coming from the public dummyjson API.
 

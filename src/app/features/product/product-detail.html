@@ -44,10 +44,10 @@
       }
     </div>
   } @else if (product.value(); as p) {
-    <div class="mt-6 grid gap-10 lg:grid-cols-2">
+    <div class="fade-up mt-6 grid gap-10 lg:grid-cols-2">
       <!-- Gallery -->
       <div class="lg:sticky lg:top-24 lg:self-start">
-        <div class="aspect-square overflow-hidden" style="background: var(--tile)">
+        <div class="aspect-square overflow-hidden rounded-2xl" style="background: var(--tile)">
           <img
             [src]="images()[activeImage()]"
             [alt]="p.title"
@@ -60,7 +60,7 @@
             @for (image of images(); track image; let i = $index) {
               <button
                 type="button"
-                class="h-16 w-16 overflow-hidden"
+                class="h-16 w-16 overflow-hidden rounded-lg transition-transform hover:scale-105"
                 style="background: var(--tile)"
                 [style.outline]="i === activeImage() ? '2px solid var(--accent)' : 'none'"
                 [style.outlineOffset]="'2px'"
@@ -109,10 +109,56 @@
 
         <p class="mt-5 max-w-prose leading-relaxed text-ink-muted">{{ p.description }}</p>
 
+        <div class="mt-6 space-y-5">
+          <div>
+            <p class="mb-2 text-sm font-medium">Color — <span class="text-ink-muted">{{ colorName() }}</span></p>
+            <div class="flex gap-2" role="radiogroup" aria-label="Color">
+              @for (color of colors; track color.name; let i = $index) {
+                <button
+                  type="button"
+                  role="radio"
+                  class="h-9 w-9 rounded-full border-2 transition-transform hover:scale-110"
+                  [style.background]="color.hex"
+                  [style.borderColor]="i === selectedColor() ? 'var(--accent)' : 'transparent'"
+                  [style.outline]="i === selectedColor() ? '2px solid var(--accent)' : 'none'"
+                  [style.outlineOffset]="'2px'"
+                  [attr.aria-checked]="i === selectedColor()"
+                  [attr.aria-label]="'Color ' + color.name"
+                  (click)="selectColor(i)"
+                ></button>
+              }
+            </div>
+          </div>
+
+          <div>
+            <p class="mb-2 text-sm font-medium">Quantity</p>
+            <div class="flex items-center gap-3">
+              <button
+                type="button"
+                class="btn btn-outline h-11 w-11 p-0"
+                (click)="decrement()"
+                [disabled]="quantity() <= 1"
+                aria-label="Decrease quantity"
+                >−</button
+              >
+              <span class="price min-w-8 text-center text-lg">{{ quantity() }}</span>
+              <button
+                type="button"
+                class="btn btn-outline h-11 w-11 p-0"
+                (click)="increment()"
+                [disabled]="quantity() >= p.stock"
+                aria-label="Increase quantity"
+                >+</button
+              >
+            </div>
+          </div>
+        </div>
+
         <div class="mt-6 flex flex-wrap gap-3">
           <button
             type="button"
             class="btn btn-primary"
+            [class.pop]="added()"
             (click)="addToCart()"
             [disabled]="p.stock === 0"
           >
@@ -243,6 +289,7 @@
         <button
           type="button"
           class="btn btn-primary flex-1"
+          [class.pop]="added()"
           (click)="addToCart()"
           [disabled]="p.stock === 0"
         >
