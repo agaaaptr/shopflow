@@ -1,0 +1,256 @@
+<app-navbar />
+
+<main class="container-page pb-28 pt-6 lg:pb-16">
+  <nav aria-label="Breadcrumb" class="text-sm text-ink-muted">
+    <ol class="flex items-center gap-2">
+      <li><a routerLink="/home" class="transition-colors hover:text-ink">Home</a></li>
+      <li aria-hidden="true">/</li>
+      <li>
+        <a routerLink="/home" fragment="featured" class="transition-colors hover:text-ink"
+          >Products</a
+        >
+      </li>
+      <li aria-hidden="true">/</li>
+      <li aria-current="page" class="truncate text-ink">
+        {{ product.value()?.title ?? 'Product' }}
+      </li>
+    </ol>
+  </nav>
+
+  @if (product.isLoading()) {
+    <div class="mt-6 grid gap-10 lg:grid-cols-2" aria-busy="true" aria-label="Loading product">
+      <div class="skeleton aspect-square"></div>
+      <div class="space-y-4">
+        <div class="skeleton h-4 w-24"></div>
+        <div class="skeleton h-10 w-3/4"></div>
+        <div class="skeleton h-4 w-40"></div>
+        <div class="skeleton h-8 w-32"></div>
+        <div class="skeleton h-24 w-full"></div>
+        <div class="skeleton h-12 w-52"></div>
+      </div>
+    </div>
+  } @else if (product.error()) {
+    <div class="mt-10 border p-10 text-center" style="border-color: var(--line)" role="alert">
+      @if (product.statusCode() === 404) {
+        <p class="font-display text-lg font-semibold">Product not found</p>
+        <p class="mt-1 text-sm text-ink-muted">
+          This product may have sold out or the link is incorrect.
+        </p>
+        <a routerLink="/home" class="btn btn-primary mt-5">Back to shop</a>
+      } @else {
+        <p class="font-display text-lg font-semibold">We couldn't load this product</p>
+        <p class="mt-1 text-sm text-ink-muted">Check your connection and try again.</p>
+        <button type="button" class="btn btn-primary mt-5" (click)="retry()">Retry</button>
+      }
+    </div>
+  } @else if (product.value(); as p) {
+    <div class="mt-6 grid gap-10 lg:grid-cols-2">
+      <!-- Gallery -->
+      <div class="lg:sticky lg:top-24 lg:self-start">
+        <div class="aspect-square overflow-hidden" style="background: var(--tile)">
+          <img
+            [src]="images()[activeImage()]"
+            [alt]="p.title"
+            class="h-full w-full object-contain p-8"
+          />
+        </div>
+
+        @if (images().length > 1) {
+          <div class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Product images">
+            @for (image of images(); track image; let i = $index) {
+              <button
+                type="button"
+                class="h-16 w-16 overflow-hidden"
+                style="background: var(--tile)"
+                [style.outline]="i === activeImage() ? '2px solid var(--accent)' : 'none'"
+                [style.outlineOffset]="'2px'"
+                (click)="activeImage.set(i)"
+                [attr.aria-label]="'View image ' + (i + 1)"
+                [attr.aria-pressed]="i === activeImage()"
+              >
+                <img [src]="image" alt="" class="h-full w-full object-contain p-1" />
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Info -->
+      <div>
+        <p class="text-sm capitalize text-ink-muted">{{ p.brand ?? p.category }}</p>
+        <h1 class="mt-2 font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
+          {{ p.title }}
+        </h1>
+
+        <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+          <span class="flex items-center gap-1">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z"
+              />
+            </svg>
+            {{ p.rating.toFixed(1) }}
+          </span>
+          <span class="text-ink-muted">({{ p.reviews?.length ?? 0 }} reviews)</span>
+          <span aria-hidden="true" class="text-ink-muted">·</span>
+          <span [style.color]="p.stock > 0 ? 'var(--ok)' : 'var(--danger)'">
+            {{ p.stock > 0 ? 'In stock' : 'Out of stock' }}
+          </span>
+        </div>
+
+        <div class="mt-5 flex flex-wrap items-baseline gap-3">
+          <p class="price text-3xl">\${{ formatPrice(p.price) }}</p>
+          @if (p.discountPercentage > 0) {
+            <span class="text-sm text-ink-muted">
+              Save {{ p.discountPercentage.toFixed(0) }}%
+            </span>
+          }
+        </div>
+
+        <p class="mt-5 max-w-prose leading-relaxed text-ink-muted">{{ p.description }}</p>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="addToCart()"
+            [disabled]="p.stock === 0"
+          >
+            {{ added() ? 'Added ✓' : 'Add to Cart' }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline"
+            (click)="toggleWishlist()"
+            [attr.aria-pressed]="wishlisted()"
+          >
+            {{ wishlisted() ? '♥ In wishlist' : '♡ Add to Wishlist' }}
+          </button>
+        </div>
+        <p class="sr-only" aria-live="polite">{{ added() ? 'Added to cart' : '' }}</p>
+
+        <!-- Details -->
+        <div class="mt-10">
+          <div class="flex flex-wrap gap-2" role="group" aria-label="Product details">
+            <button
+              type="button"
+              [class]="tabClass('description')"
+              [attr.aria-pressed]="tab() === 'description'"
+              (click)="tab.set('description')"
+            >
+              Description
+            </button>
+            <button
+              type="button"
+              [class]="tabClass('specifications')"
+              [attr.aria-pressed]="tab() === 'specifications'"
+              (click)="tab.set('specifications')"
+            >
+              Specifications
+            </button>
+            <button
+              type="button"
+              [class]="tabClass('reviews')"
+              [attr.aria-pressed]="tab() === 'reviews'"
+              (click)="tab.set('reviews')"
+            >
+              Reviews
+            </button>
+          </div>
+
+          <div class="mt-5 text-sm">
+            @switch (tab()) {
+              @case ('description') {
+                <p class="max-w-prose leading-relaxed text-ink-muted">{{ p.description }}</p>
+                @if (p.tags?.length) {
+                  <ul class="mt-4 flex flex-wrap gap-2">
+                    @for (tag of p.tags; track tag) {
+                      <li class="border px-2 py-1 text-xs text-ink-muted" style="border-color: var(--line)">
+                        {{ tag }}
+                      </li>
+                    }
+                  </ul>
+                }
+              }
+              @case ('specifications') {
+                <dl class="grid gap-y-2 sm:grid-cols-[160px_1fr]">
+                  @if (p.brand) {
+                    <dt class="text-ink-muted">Brand</dt>
+                    <dd>{{ p.brand }}</dd>
+                  }
+                  @if (p.sku) {
+                    <dt class="text-ink-muted">SKU</dt>
+                    <dd>{{ p.sku }}</dd>
+                  }
+                  <dt class="text-ink-muted">Stock</dt>
+                  <dd>{{ p.stock }} units</dd>
+                  @if (p.weight) {
+                    <dt class="text-ink-muted">Weight</dt>
+                    <dd>{{ p.weight }}</dd>
+                  }
+                  @if (p.dimensions) {
+                    <dt class="text-ink-muted">Dimensions</dt>
+                    <dd>
+                      {{ p.dimensions.width }} × {{ p.dimensions.height }} ×
+                      {{ p.dimensions.depth }}
+                    </dd>
+                  }
+                  @if (p.warrantyInformation) {
+                    <dt class="text-ink-muted">Warranty</dt>
+                    <dd>{{ p.warrantyInformation }}</dd>
+                  }
+                  @if (p.shippingInformation) {
+                    <dt class="text-ink-muted">Shipping</dt>
+                    <dd>{{ p.shippingInformation }}</dd>
+                  }
+                  @if (p.returnPolicy) {
+                    <dt class="text-ink-muted">Returns</dt>
+                    <dd>{{ p.returnPolicy }}</dd>
+                  }
+                </dl>
+              }
+              @case ('reviews') {
+                @if (p.reviews?.length) {
+                  <ul class="space-y-3">
+                    @for (review of p.reviews; track review.reviewerEmail + review.date) {
+                      <li class="border p-4" style="border-color: var(--line)">
+                        <div class="flex items-center justify-between gap-3">
+                          <span class="font-medium text-ink">{{ review.reviewerName }}</span>
+                          <span class="text-xs text-ink-muted">★ {{ review.rating.toFixed(1) }}</span>
+                        </div>
+                        <p class="mt-1 text-ink-muted">{{ review.comment }}</p>
+                        <p class="mt-1 text-xs text-ink-muted">{{ review.date.slice(0, 10) }}</p>
+                      </li>
+                    }
+                  </ul>
+                } @else {
+                  <p class="text-ink-muted">No reviews yet.</p>
+                }
+              }
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky mobile add-to-cart -->
+    <div
+      class="fixed inset-x-0 bottom-0 z-30 border-t p-3 lg:hidden"
+      style="background: var(--surface); border-color: var(--line)"
+    >
+      <div class="mx-auto flex max-w-3xl items-center justify-between gap-3">
+        <span class="price text-lg">\${{ formatPrice(p.price) }}</span>
+        <button
+          type="button"
+          class="btn btn-primary flex-1"
+          (click)="addToCart()"
+          [disabled]="p.stock === 0"
+        >
+          {{ added() ? 'Added ✓' : 'Add to Cart' }}
+        </button>
+      </div>
+    </div>
+  }
+</main>
+
+<app-footer />
