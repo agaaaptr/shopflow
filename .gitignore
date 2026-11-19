@@ -1,27 +1,52 @@
-# >>> noir:ignore >>>
-/.noir/store/
-/.noir/handoff/
-/.noir/.env
-/.noir/.env.*
-!/.noir/.env.example
-/.noir/transcripts/
-/.noir/audit/integration-*.jsonl
-/.noir/dedup-cache.json
-# <<< noir:ignore <<<
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-# Agent scaffolding — not part of the take-home submission (matches stockflow/classflow precedent)
-/.claude/
-/.mcp.json
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/mcp.json
+.history/*
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+__screenshots__/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Company test PDF — local reference only (not part of the submission)
+/Front End Task (Angular).pdf
+
+# Internal tooling / notes — never publish (contains .env, briefs)
 /.noir/
-/.notes/
-
-# Secrets / env
-.env
-.env.*
-!.env.example
-
-# Node / Angular (scaffolded in the next session)
-node_modules/
-dist/
-.angular/
-*.tsbuildinfo
+/.claude/
+/.pdf-extract/
