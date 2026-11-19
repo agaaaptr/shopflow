@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, computed, inject, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, computed, inject, signal, viewChild } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
@@ -188,18 +188,21 @@ import { CartService } from '../core/cart.service';
 
       @if (searchOpen()) {
         <div class="container-page pb-3">
-          <form role="search" (ngSubmit)="submitSearch()" class="flex items-center gap-2">
+          <div role="search" class="flex items-center gap-2">
             <input
               #searchInput
               autofocus
               [value]="query()"
               (input)="query.set($any($event.target).value)"
+              (keydown.enter)="submitSearch()"
               class="input flex-1"
               placeholder="Search products…"
               aria-label="Search products"
             />
-            <button type="submit" class="btn btn-primary shrink-0">Search</button>
-          </form>
+            <button type="button" class="btn btn-primary shrink-0" (click)="submitSearch()">
+              Search
+            </button>
+          </div>
         </div>
       }
     </header>
@@ -220,6 +223,7 @@ export class Navbar {
   readonly cartOpen = signal(false);
   readonly profileOpen = signal(false);
   readonly query = signal('');
+  readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
   readonly url = signal(this.router.url);
   readonly onHome = computed(() => this.url() === '/home');
@@ -272,7 +276,8 @@ export class Navbar {
   }
 
   submitSearch(): void {
-    const q = this.query().trim();
+    const raw = this.searchInput()?.nativeElement.value ?? this.query();
+    const q = raw.trim();
     this.searchOpen.set(false);
     void this.router.navigate(['/home'], { queryParams: q ? { q } : {} });
   }
