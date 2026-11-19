@@ -1,0 +1,27 @@
+# >>> noir:ignore >>>
+/.noir/store/
+/.noir/handoff/
+/.noir/.env
+/.noir/.env.*
+!/.noir/.env.example
+/.noir/transcripts/
+/.noir/audit/integration-*.jsonl
+/.noir/dedup-cache.json
+# <<< noir:ignore <<<
+
+# Agent scaffolding — not part of the take-home submission (matches stockflow/classflow precedent)
+/.claude/
+/.mcp.json
+/.noir/
+/.notes/
+
+# Secrets / env
+.env
+.env.*
+!.env.example
+
+# Node / Angular (scaffolded in the next session)
+node_modules/
+dist/
+.angular/
+*.tsbuildinfo
