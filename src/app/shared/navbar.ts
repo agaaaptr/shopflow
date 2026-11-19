@@ -14,7 +14,8 @@ import { AuthService } from '../core/auth.service';
       <div class="container-page flex h-16 items-center justify-between gap-3">
         <a routerLink="/home" class="flex items-center gap-2" aria-label="ShopEase — home">
           <span
-            class="grid h-7 w-7 place-items-center bg-accent font-display text-sm font-bold text-white"
+            class="grid h-7 w-7 place-items-center font-display text-sm font-bold text-white"
+            style="background: var(--accent-bg)"
             aria-hidden="true"
             >S</span
           >

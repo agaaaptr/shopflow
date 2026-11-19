@@ -68,7 +68,7 @@ export interface Slide {
                 <a
                   [href]="slide.href"
                   class="btn mt-7"
-                  [style.background]="slide.panel === 'sand' ? 'var(--ink)' : '#ffffff'"
+                  [style.background]="slide.panel === 'sand' ? '#1a1a18' : '#ffffff'"
                   [style.color]="slide.panel === 'sand' ? '#ffffff' : '#1a1a18'"
                   >{{ slide.cta }}</a
                 >
@@ -91,12 +91,16 @@ export interface Slide {
           @for (slide of slides(); track slide.title; let i = $index) {
             <button
               type="button"
-              class="h-2.5 w-2.5"
-              [style.background]="i === index() ? 'var(--accent)' : 'var(--line)'"
+              class="grid h-11 w-11 place-items-center"
               [attr.aria-label]="'Go to slide ' + (i + 1)"
               [attr.aria-current]="i === index() ? 'true' : null"
               (click)="goTo(i)"
-            ></button>
+            >
+              <span
+                class="h-2.5 w-2.5"
+                [style.background]="i === index() ? 'var(--accent)' : 'var(--line)'"
+              ></span>
+            </button>
           }
         </div>
         <div class="flex gap-2">
@@ -199,14 +203,22 @@ export class HeroSlider {
     if (!next || !current.contains(next)) this.interacting.set(false);
   }
 
+  // Fixed brand panels (theme-independent) so contrast holds in light and dark.
+  private static readonly PANELS: Record<
+    Slide['panel'],
+    { bg: string; fg: string }
+  > = {
+    accent: { bg: '#0f6e5c', fg: '#ffffff' },
+    ink: { bg: '#1a1a18', fg: '#ffffff' },
+    sand: { bg: '#e7e0d3', fg: '#1a1a18' },
+  };
+
   panelBackground(panel: Slide['panel']): string {
-    if (panel === 'accent') return 'var(--accent)';
-    if (panel === 'ink') return 'var(--ink)';
-    return 'var(--sand)';
+    return HeroSlider.PANELS[panel].bg;
   }
 
   panelColor(panel: Slide['panel']): string {
-    return panel === 'sand' ? 'var(--ink)' : '#ffffff';
+    return HeroSlider.PANELS[panel].fg;
   }
 
   private stopTimer(): void {

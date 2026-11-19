@@ -11,6 +11,8 @@
   --line: #e5e5e1;
   --accent: #0f6e5c;
   --accent-strong: #0a5648;
+  --accent-bg: #0f6e5c;
+  --accent-bg-strong: #0a5648;
   --ok: #1f7a44;
   --danger: #c0392b;
   --tile: #ebe8e1;
@@ -25,6 +27,8 @@
   --line: #353633;
   --accent: #2f9a84;
   --accent-strong: #46b49e;
+  --accent-bg: #0f6e5c;
+  --accent-bg-strong: #0a5648;
   --ok: #3cae6b;
   --danger: #e06a5e;
   --tile: #2b2a26;
@@ -128,11 +132,11 @@
     cursor: not-allowed;
   }
   .btn-primary {
-    background: var(--accent);
+    background: var(--accent-bg);
     color: #fff;
   }
   .btn-primary:hover:not(:disabled):not([aria-disabled='true']) {
-    background: var(--accent-strong);
+    background: var(--accent-bg-strong);
   }
   .btn-ghost {
     background: transparent;
@@ -188,7 +192,7 @@
     font-weight: 600;
     line-height: 1;
     border-radius: 0;
-    background: var(--accent);
+    background: var(--accent-bg);
     color: #fff;
   }
 
