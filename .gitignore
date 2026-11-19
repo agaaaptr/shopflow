@@ -50,3 +50,7 @@ Thumbs.db
 /.noir/
 /.claude/
 /.pdf-extract/
+
+# Internal — not part of the public submission
+/CLAUDE.md
+/docs/brief.md

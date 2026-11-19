@@ -2,7 +2,7 @@
 
 Front-end e-commerce take-home untuk **Unictive** (Angular + Tailwind CSS). Referensi: screenshot "ShopEase".
 
-Sumber brief: [`docs/brief.md`](./brief.md). Riset best practice + sumber URL: [`docs/research.md`](./research.md).
+Riset best practice + sumber URL: [`docs/research.md`](./research.md). **Art direction final (terkunci): [`docs/design-direction.md`](./design-direction.md)** — menggantikan proposal §6 di bawah.
 
 > **Verified 2026-11-19** lewat riset paralel (5 topik, ~142 tool call) + verifikasi adversarial klaim kritis. Koreksi penting tercantum di `research.md` §Corrections.
 
