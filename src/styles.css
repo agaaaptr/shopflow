@@ -13,6 +13,8 @@
   --accent-strong: #0a5648;
   --ok: #1f7a44;
   --danger: #c0392b;
+  --tile: #ebe8e1;
+  --sand: #e7e0d3;
 }
 
 :root.dark {
@@ -25,6 +27,8 @@
   --accent-strong: #46b49e;
   --ok: #3cae6b;
   --danger: #e06a5e;
+  --tile: #2b2a26;
+  --sand: #3a3630;
 }
 
 /* ---- semantic tokens exposed to Tailwind utilities ---- */
