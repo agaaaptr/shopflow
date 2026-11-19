@@ -18,7 +18,7 @@ export class AuthService {
   readonly user = this._user.asReadonly();
   readonly isAuthenticated = computed(() => this._token() !== null);
 
-  login(username: string, password: string): Observable<LoginResponse> {
+  login(username: string, password: string, remember = true): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(LOGIN_URL, { username, password, expiresInMins: 60 })
       .pipe(
@@ -33,8 +33,14 @@ export class AuthService {
           };
           this._token.set(res.accessToken);
           this._user.set(user);
-          writeLocal(TOKEN_KEY, res.accessToken);
-          writeLocal(USER_KEY, JSON.stringify(user));
+          if (remember) {
+            writeLocal(TOKEN_KEY, res.accessToken);
+            writeLocal(USER_KEY, JSON.stringify(user));
+          } else {
+            // Session-only sign-in: keep the token in memory, don't persist across reloads.
+            removeLocal(TOKEN_KEY);
+            removeLocal(USER_KEY);
+          }
         }),
       );
   }
