@@ -15,17 +15,30 @@ import { CartService } from '../core/cart.service';
       style="background: var(--surface); border-bottom: 1px solid var(--line)"
     >
       <div class="container-page flex h-16 items-center justify-between gap-3">
-        <a routerLink="/home" class="flex shrink-0 items-center gap-2" aria-label="ShopFlow home">
-          <span
-            class="grid h-8 w-8 place-items-center rounded-full font-display text-sm font-bold text-white"
-            style="background: var(--accent-bg)"
-            aria-hidden="true"
-            >S</span
+        <div class="flex min-w-0 items-center gap-1">
+          <button
+            type="button"
+            class="btn btn-ghost h-11 w-11 p-0 md:hidden"
+            (click)="toggleMenu()"
+            [attr.aria-expanded]="menuOpen()"
+            aria-label="Menu"
           >
-          <span class="font-display text-lg font-bold tracking-tight">
-            Shop<span class="text-accent">Flow</span>
-          </span>
-        </a>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M3 6h18M3 12h18M3 18h18" />
+            </svg>
+          </button>
+          <a routerLink="/home" class="flex shrink-0 items-center gap-2" aria-label="ShopFlow home">
+            <span
+              class="grid h-8 w-8 place-items-center rounded-full font-display text-sm font-bold text-white"
+              style="background: var(--accent-bg)"
+              aria-hidden="true"
+              >S</span
+            >
+            <span class="font-display text-lg font-bold tracking-tight">
+              Shop<span class="text-accent">Flow</span>
+            </span>
+          </a>
+        </div>
 
         <nav class="hidden items-center gap-6 md:flex" aria-label="Primary">
           <a
@@ -208,6 +221,26 @@ import { CartService } from '../core/cart.service';
       </div>
 
       <div
+        [class]="menuClass()"
+        [inert]="!menuOpen()"
+        [attr.aria-hidden]="menuOpen() ? null : 'true'"
+      >
+        <nav class="flex flex-col gap-1 px-4 pb-3" aria-label="Mobile">
+          <a routerLink="/home" [class]="navLinkClass(onHome())" (click)="closeMenu()">Home</a>
+          <a routerLink="/products" [class]="navLinkClass(onProducts())" (click)="closeMenu()">Products</a>
+          <a routerLink="/categories" [class]="navLinkClass(onCategories())" (click)="closeMenu()">Categories</a>
+          <a routerLink="/about" [class]="navLinkClass(onAbout())" (click)="closeMenu()">About</a>
+          <button
+            type="button"
+            class="mt-2 rounded-xl px-3 py-3 text-left text-base font-medium text-ink transition-colors hover:bg-line"
+            (click)="logout()"
+          >
+            Logout
+          </button>
+        </nav>
+      </div>
+
+      <div
         [class]="searchBarClass()"
         [inert]="!searchOpen()"
         [attr.aria-hidden]="searchOpen() ? null : 'true'"
@@ -244,6 +277,7 @@ export class Navbar {
   readonly searchOpen = signal(false);
   readonly cartOpen = signal(false);
   readonly profileOpen = signal(false);
+  readonly menuOpen = signal(false);
   readonly query = signal('');
   readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
@@ -269,6 +303,7 @@ export class Navbar {
         this.searchOpen.set(false);
         this.cartOpen.set(false);
         this.profileOpen.set(false);
+        this.menuOpen.set(false);
       });
   }
 
@@ -282,6 +317,7 @@ export class Navbar {
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.cartOpen.set(false);
       this.profileOpen.set(false);
+      this.menuOpen.set(false);
     }
   }
 
@@ -292,6 +328,30 @@ export class Navbar {
     if (this.searchOpen()) {
       setTimeout(() => this.searchInput()?.nativeElement.focus());
     }
+  }
+
+  toggleMenu(): void {
+    this.cartOpen.set(false);
+    this.profileOpen.set(false);
+    this.searchOpen.set(false);
+    this.menuOpen.update((value) => !value);
+  }
+
+  closeMenu(): void {
+    this.menuOpen.set(false);
+  }
+
+  menuClass(): string {
+    const base = 'overflow-hidden transition-all duration-300 ease-out md:hidden';
+    return this.menuOpen()
+      ? `${base} max-h-96 opacity-100`
+      : `${base} max-h-0 opacity-0 pointer-events-none`;
+  }
+
+  navLinkClass(active: boolean): string {
+    return `block rounded-xl px-3 py-3 text-base transition-colors ${
+      active ? 'font-semibold text-accent' : 'text-ink hover:bg-line'
+    }`;
   }
 
   searchBarClass(): string {
