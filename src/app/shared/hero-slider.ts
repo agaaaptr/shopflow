@@ -24,28 +24,6 @@ export interface Slide {
       (focusin)="focused.set(true)"
       (focusout)="onFocusOut($event)"
     >
-      <div class="mb-3 flex items-center justify-end">
-        <button
-          type="button"
-          class="btn btn-outline"
-          (click)="toggle()"
-          [attr.aria-label]="playing() ? 'Pause slide rotation' : 'Start slide rotation'"
-        >
-          @if (playing()) {
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <rect x="6" y="5" width="4" height="14" />
-              <rect x="14" y="5" width="4" height="14" />
-            </svg>
-            Pause
-          } @else {
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M7 4v16l13-8Z" />
-            </svg>
-            Play
-          }
-        </button>
-      </div>
-
       <div
         class="relative overflow-hidden"
         aria-live="off"
@@ -147,15 +125,12 @@ export class HeroSlider {
   readonly slides = input.required<Slide[]>();
 
   readonly index = signal(0);
-  readonly playing = signal(true);
   readonly reduceMotion = signal(false);
   readonly hovering = signal(false);
   readonly focused = signal(false);
   /** Bumped on manual navigation so the autoplay timer restarts from zero. */
   readonly resetTick = signal(0);
-  readonly paused = computed(
-    () => this.hovering() || this.focused() || !this.playing(),
-  );
+  readonly paused = computed(() => this.hovering() || this.focused());
 
   private timer: ReturnType<typeof setInterval> | null = null;
 
@@ -179,8 +154,7 @@ export class HeroSlider {
       const count = this.slides().length;
       // Reading resetTick re-subscribes this effect so a manual nav restarts the timer.
       void this.resetTick();
-      const paused =
-        this.hovering() || this.focused() || !this.playing() || this.reduceMotion();
+      const paused = this.hovering() || this.focused() || this.reduceMotion();
 
       this.stopTimer();
       if (!paused && count > 1) {
@@ -203,10 +177,6 @@ export class HeroSlider {
     const count = this.slides().length;
     this.index.set(((index % count) + count) % count);
     this.resetTick.update((value) => value + 1);
-  }
-
-  toggle(): void {
-    this.playing.update((value) => !value);
   }
 
   onFocusOut(event: FocusEvent): void {

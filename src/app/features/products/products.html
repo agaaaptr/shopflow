@@ -14,7 +14,7 @@
     </p>
   </div>
 
-  <nav class="no-scrollbar mt-6 flex gap-2 overflow-x-auto pb-2" aria-label="Filter by category">
+  <nav class="mt-6 flex flex-wrap gap-2" aria-label="Filter by category">
     <a routerLink="/products" [class]="chipClass('')" [attr.aria-current]="!cat() ? 'page' : null">All</a>
     @for (slug of categories; track slug) {
       <a
