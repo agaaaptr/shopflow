@@ -99,7 +99,7 @@
         </div>
 
         <div class="mt-5 flex flex-wrap items-baseline gap-3">
-          <p class="price text-3xl">\${{ formatPrice(p.price) }}</p>
+          <p class="price text-3xl">${{ formatPrice(p.price) }}</p>
           @if (p.discountPercentage > 0) {
             <span class="text-sm text-ink-muted">
               Save {{ p.discountPercentage.toFixed(0) }}%
@@ -285,7 +285,7 @@
       style="background: var(--surface); border-color: var(--line)"
     >
       <div class="mx-auto flex max-w-3xl items-center justify-between gap-3">
-        <span class="price text-lg">\${{ formatPrice(p.price) }}</span>
+        <span class="price text-lg">${{ formatPrice(p.price) }}</span>
         <button
           type="button"
           class="btn btn-primary flex-1"
