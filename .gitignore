@@ -54,3 +54,6 @@ Thumbs.db
 # Internal — not part of the public submission
 /CLAUDE.md
 /docs/brief.md
+
+# Local MCP config (machine-specific path)
+/.mcp.json
