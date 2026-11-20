@@ -110,7 +110,7 @@ import { CartService } from '../core/cart.service';
 
             @if (cartOpen()) {
               <div
-                class="absolute right-0 top-12 z-50 w-80 rounded-2xl border p-4 shadow-lg"
+                class="absolute right-0 top-12 z-50 w-80 rounded-2xl border p-4 shadow-lg max-sm:fixed max-sm:inset-x-4 max-sm:top-20 max-sm:w-auto"
                 style="background: var(--surface); border-color: var(--line); box-shadow: var(--shadow-float)"
               >
                 <p class="font-display font-semibold">Your cart</p>
@@ -172,12 +172,12 @@ import { CartService } from '../core/cart.service';
 
             @if (profileOpen()) {
               <div
-                class="absolute right-0 top-12 z-50 w-60 rounded-2xl border p-4 shadow-lg"
+                class="absolute right-0 top-12 z-50 w-60 rounded-2xl border p-4 shadow-lg max-sm:fixed max-sm:inset-x-4 max-sm:top-20 max-sm:w-auto"
                 style="background: var(--surface); border-color: var(--line); box-shadow: var(--shadow-float)"
               >
                 @if (user(); as u) {
-                  <p class="font-semibold">{{ u.firstName }} {{ u.lastName }}</p>
-                  <p class="text-sm text-ink-muted">{{ u.email }}</p>
+                  <p class="break-words font-semibold">{{ u.firstName }} {{ u.lastName }}</p>
+                  <p class="break-words text-sm text-ink-muted">{{ u.email }}</p>
                 }
                 <button type="button" class="btn btn-outline mt-3 w-full" (click)="logout()">Logout</button>
               </div>

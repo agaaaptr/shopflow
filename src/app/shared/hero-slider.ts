@@ -19,8 +19,6 @@ export interface Slide {
       role="region"
       aria-roledescription="carousel"
       aria-label="Featured collections"
-      (mouseenter)="hovering.set(true)"
-      (mouseleave)="hovering.set(false)"
       (focusin)="focused.set(true)"
       (focusout)="onFocusOut($event)"
     >
@@ -46,17 +44,23 @@ export interface Slide {
         </button>
       </div>
 
-      <div class="relative" aria-live="off">
-        @for (slide of slides(); track slide.title; let i = $index) {
-          @if (i === index()) {
+      <div
+        class="relative overflow-hidden"
+        aria-live="off"
+        style="border-radius: var(--radius-lg)"
+      >
+        <div class="grid">
+          @for (slide of slides(); track slide.title; let i = $index) {
             <div
               role="group"
               aria-roledescription="slide"
               [attr.aria-label]="i + 1 + ' of ' + slides().length"
-              class="fade-in grid min-h-[460px] items-center gap-6 overflow-hidden p-8 md:grid-cols-2 md:p-14"
+              [attr.aria-hidden]="i === index() ? null : 'true'"
+              [inert]="i !== index()"
+              class="col-start-1 row-start-1 grid min-h-[460px] items-center gap-6 overflow-hidden p-8 transition-transform duration-500 ease-out md:grid-cols-2 md:p-14"
               [style.background]="panelBackground(slide.panel)"
               [style.color]="panelColor(slide.panel)"
-              [style.border-radius]="'var(--radius-lg)'"
+              [style.transform]="'translateX(' + (i - index()) * 100 + '%)'"
             >
               <div class="max-w-md">
                 <p class="text-sm font-medium" style="opacity: 0.85">{{ slide.kicker }}</p>
@@ -71,6 +75,8 @@ export interface Slide {
                   class="btn mt-7"
                   [style.background]="slide.panel === 'sand' ? '#1a1a18' : '#ffffff'"
                   [style.color]="slide.panel === 'sand' ? '#ffffff' : '#1a1a18'"
+                  (mouseenter)="hovering.set(true)"
+                  (mouseleave)="hovering.set(false)"
                   >{{ slide.cta }}</a
                 >
               </div>
@@ -84,7 +90,7 @@ export interface Slide {
               </div>
             </div>
           }
-        }
+        </div>
       </div>
 
       <div class="mt-4 flex items-center justify-between">
@@ -169,7 +175,7 @@ export class HeroSlider {
 
       this.stopTimer();
       if (!paused && count > 1) {
-        this.timer = setInterval(() => this.index.update((i) => (i + 1) % count), 6000);
+        this.timer = setInterval(() => this.index.update((i) => (i + 1) % count), 4000);
       }
     });
 

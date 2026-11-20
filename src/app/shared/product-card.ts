@@ -28,15 +28,22 @@ import { Product } from '../core/models';
       <div class="mt-3 flex items-start justify-between gap-3">
         <div class="min-w-0">
           <p class="line-clamp-2 font-medium leading-snug">{{ product().title }}</p>
-          <p class="mt-1 flex items-center gap-1.5 text-xs text-ink-muted">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <p class="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-ink-muted">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+              class="shrink-0"
+            >
               <path
                 d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z"
               />
             </svg>
-            <span>{{ product().rating.toFixed(1) }}</span>
-            <span aria-hidden="true">·</span>
-            <span class="capitalize">{{ prettyCategory() }}</span>
+            <span class="shrink-0">{{ product().rating.toFixed(1) }}</span>
+            <span aria-hidden="true" class="shrink-0">·</span>
+            <span class="min-w-0 truncate capitalize">{{ prettyCategory() }}</span>
           </p>
         </div>
         <p class="price shrink-0 text-right">\${{ formatPrice(product().price) }}</p>
