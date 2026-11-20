@@ -80,6 +80,14 @@
           <app-product-card [product]="product" [badge]="i === 0 && !query() ? 'Bestseller' : null" />
         }
       </div>
+
+      @if (hasMore()) {
+        <div class="mt-10 text-center">
+          <button type="button" class="btn btn-outline" (click)="loadMore()">
+            Load more ({{ matching().length - featured().length }} remaining)
+          </button>
+        </div>
+      }
     }
   </section>
 </main>

@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
@@ -91,7 +91,23 @@ export class Home {
       .sort((a, b) => b.rating - a.rating || a.title.localeCompare(b.title));
   });
 
-  readonly featured = computed<Product[]>(() => this.matching().slice(0, 12));
+  readonly featured = computed<Product[]>(() => this.matching().slice(0, this.limit()));
+
+  readonly limit = signal(12);
+  readonly hasMore = computed(() => this.limit() < this.matching().length);
+
+  constructor() {
+    effect(() => {
+      // Reset pagination whenever the search or category filter changes.
+      this.query();
+      this.cat();
+      this.limit.set(12);
+    });
+  }
+
+  loadMore(): void {
+    this.limit.update((value) => value + 12);
+  }
 
   reload(): void {
     this.list.reload();
