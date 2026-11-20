@@ -272,8 +272,8 @@ export class Navbar {
   searchBarClass(): string {
     const base = 'container-page overflow-hidden transition-all duration-300 ease-out';
     return this.searchOpen()
-      ? `${base} max-h-24 translate-y-0 pb-3 opacity-100`
-      : `${base} max-h-0 -translate-y-1 pb-0 opacity-0 pointer-events-none`;
+      ? `${base} max-h-28 translate-y-0 pt-3 pb-6 opacity-100`
+      : `${base} max-h-0 -translate-y-1 pt-0 pb-0 opacity-0 pointer-events-none`;
   }
 
   toggleCart(): void {
