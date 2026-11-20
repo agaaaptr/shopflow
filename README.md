@@ -8,7 +8,7 @@ A small, polished e-commerce front-end built for a front-end technical assessmen
 
 - **Sign in** with a validated form wired to `dummyjson /auth/login`: inline errors, pending state, and return-to-origin after redirect.
 - **Protected routes**: home and product detail are guarded; anonymous visitors are sent to sign-in and returned after logging in.
-- **Home**: one accessible hero slider (pause/play, arrows, progress indicator, reduced-motion) and a curated grid of fashion products.
+- **Home**: one accessible hero slider (arrows, progress indicator, auto-advance that pauses on hover/focus, reduced-motion) and a curated grid of fashion products.
 - **Products**: the full catalog without the hero, filterable by category chips and search, with load-more pagination.
 - **Product detail**: a real product by id (deep-link and refresh safe): gallery, price/rating/stock, color swatches + quantity, description/specifications/reviews, add-to-cart feedback, wishlist toggle.
 - **Search, cart, and profile** in the navbar: search filters the products page, cart tracks selections in-memory, profile shows the signed-in account.
@@ -30,7 +30,7 @@ A small, polished e-commerce front-end built for a front-end technical assessmen
 
 ## Getting started
 
-Requirement: Node `^24.15.0` or `>=26.0.0` (see `.nvmrc`).
+Requirement: Node `^22.22.3`, `^24.15.0`, or `>=26.0.0` (see `.nvmrc`, which pins 26).
 
 ```bash
 npm ci
@@ -56,7 +56,7 @@ src/app/
 
 ## Decisions & trade-offs
 
-- **Login API: dummyjson, not reqres.in.** `dummyjson /auth/login` validates credentials (a wrong password returns `400`), which actually demonstrates form validation. reqres.in's keyless tier accepts any password for a known email and shares a low daily quota. reqres.in (`eve.holt@reqres.in` / `cityslicka`) remains a documented fallback.
+- **Login API: dummyjson, not reqres.in.** `dummyjson /auth/login` validates credentials (a wrong password returns `400`), which actually demonstrates form validation. reqres.in's keyless tier accepts any password for a known email and shares a low daily quota. reqres.in (`eve.holt@reqres.in` / `cityslicka`) is listed here as an alternative if the dummyjson quota runs out; it is not wired into the app.
 - **Design.** A distinctive "editorial marketplace" direction: deep petrol teal on neutral chalk, Sora + Plus Jakarta Sans, and prices set in tabular figures. The reference structure is kept; the visual language is re-themed rather than cloned.
 - **Data authenticity.** The grid and detail pages are driven by the API. Products are curated to fashion categories and sorted by rating so the store reads coherently. There is no hardcoded product data.
 - **Cart / wishlist** give local-state feedback only: the brief asks for the buttons and API-backed data, not persistence.
@@ -75,7 +75,7 @@ Sign-up, Google OAuth, password reset, cart/checkout, payments, and server-side 
 ## Accessibility
 
 - WCAG AA text contrast, visible `:focus-visible` rings, targets at least 44px.
-- The carousel follows the W3C ARIA APG carousel pattern with a pause control and `prefers-reduced-motion` handling.
+- The carousel follows the W3C ARIA APG carousel pattern, pauses on hover/focus, and honors `prefers-reduced-motion`.
 - Semantic HTML, labelled controls, inline errors linked with `aria-describedby`, and live-region feedback.
 
 ## Screenshots
