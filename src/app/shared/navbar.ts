@@ -186,31 +186,32 @@ import { CartService } from '../core/cart.service';
         </div>
       </div>
 
-      @if (searchOpen()) {
-        <div class="container-page pb-3">
-          <div role="search" class="flex items-center gap-2">
-            <input
-              #searchInput
-              autofocus
-              [value]="query()"
-              (input)="query.set($any($event.target).value)"
-              (keydown.enter)="submitSearch()"
-              class="input flex-1"
-              placeholder="Search products…"
-              aria-label="Search products"
-            />
-            <button type="button" class="btn btn-primary shrink-0" (click)="submitSearch()">
-              Search
-            </button>
-          </div>
+      <div
+        [class]="searchBarClass()"
+        [inert]="!searchOpen()"
+        [attr.aria-hidden]="searchOpen() ? null : 'true'"
+      >
+        <div role="search" class="flex items-center gap-2">
+          <input
+            #searchInput
+            [value]="query()"
+            (input)="query.set($any($event.target).value)"
+            (keydown.enter)="submitSearch()"
+            class="input flex-1"
+            placeholder="Search products…"
+            aria-label="Search products"
+          />
+          <button type="button" class="btn btn-primary shrink-0" (click)="submitSearch()">
+            Search
+          </button>
         </div>
-      }
+      </div>
     </header>
   `,
 })
 export class Navbar {
   private readonly auth = inject(AuthService);
-  private readonly cart = inject(CartService);
+  readonly cart = inject(CartService);
   private readonly router = inject(Router);
   private readonly elementRef = inject(ElementRef);
 
@@ -263,6 +264,16 @@ export class Navbar {
     this.cartOpen.set(false);
     this.profileOpen.set(false);
     this.searchOpen.update((value) => !value);
+    if (this.searchOpen()) {
+      setTimeout(() => this.searchInput()?.nativeElement.focus());
+    }
+  }
+
+  searchBarClass(): string {
+    const base = 'container-page overflow-hidden transition-all duration-300 ease-out';
+    return this.searchOpen()
+      ? `${base} max-h-24 translate-y-0 pb-3 opacity-100`
+      : `${base} max-h-0 -translate-y-1 pb-0 opacity-0 pointer-events-none`;
   }
 
   toggleCart(): void {
