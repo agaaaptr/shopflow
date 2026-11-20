@@ -110,7 +110,7 @@
 
         <div class="mt-6 space-y-5">
           <div>
-            <p class="mb-2 text-sm font-medium">Color — <span class="text-ink-muted">{{ colorName() }}</span></p>
+            <p class="mb-2 text-sm font-medium">Color: <span class="text-ink-muted">{{ colorName() }}</span></p>
             <div class="flex gap-2" role="radiogroup" aria-label="Color">
               @for (color of colors; track color.name; let i = $index) {
                 <button

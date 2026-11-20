@@ -65,7 +65,7 @@ function writeLocal(key: string, value: string): void {
   try {
     localStorage.setItem(key, value);
   } catch {
-    /* storage unavailable (private mode) — in-memory signal still works */
+    /* storage unavailable (private mode); in-memory signal still works */
   }
 }
 

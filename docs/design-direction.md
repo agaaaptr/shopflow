@@ -1,10 +1,10 @@
-# ShopFlow — design direction (locked, v2)
+# ShopFlow: design direction (locked, v2)
 
 Lead: frontend-design. Support: taste (anti-slop) + impeccable (audit). Supersedes docs/design.md §6 "proposal awal". v2 applies the taste cross-check: accent moved off orange-red (≈ terracotta tell) to deep petrol teal; ground neutralised.
 
 ## Concept
 
-"ShopFlow — an editorial marketplace." A curated-gallery feel, not a discount warehouse. One memorable move: the **price is the personality** — product prices set large in tabular figures, since commerce is the subject. A single **deep petrol teal** accent carries actions and the hero, against a neutral chalk ground + ink. Departs from the cobalt-blue reference (re-theme) and clears cream+serif+sage AND yellow-cream+terracotta tells.
+"ShopFlow: an editorial marketplace." A curated-gallery feel, not a discount warehouse. One memorable move: the **price is the personality**: product prices set large in tabular figures, since commerce is the subject. A single **deep petrol teal** accent carries actions and the hero, against a neutral chalk ground + ink. Departs from the cobalt-blue reference (re-theme) and clears cream+serif+sage AND yellow-cream+terracotta tells.
 
 ## Color tokens (light)
 
@@ -36,9 +36,9 @@ Lead: frontend-design. Support: taste (anti-slop) + impeccable (audit). Supersed
 
 ## Layout per page
 
-- **Login** — reference's centered card on neutral chalk, faint oversized cropped "ShopFlow" wordmark ghost behind it; at ≥1024px a split panel (form left, one transparent product cutout + one brand line right). Inputs sharp, teal `:focus-visible` 2px ring. "Login with Google" / "Forgot password?" / "Sign up" rendered at reduced opacity with a visible "demo" tag + `aria-disabled` + `title`, so they are obviously inert. Demo credentials in a small bordered note under the form.
-- **Home** — sticky navbar (solid surface tone, subtle shadow on scroll, Sora wordmark, Home/Products links, dark-mode toggle, logout ghost button). No search/cart icons in the navbar (non-functional noise). Hero = **3 typographic color-block slides** (teal field · deep-ink panel · warm-sand panel), each a distinct editorial campaign with a large Sora headline left, one short line, one CTA, and a transparent product cutout anchored right. Autoplay ~6s, prev/next + dots, visible pause/play, stops on hover/focus, static under `prefers-reduced-motion`. Below: "Featured Products" = asymmetric **featured-first bento** (one large tile + staggered cards) over a clean repeatable card unit; borderless cards on warm-gray tiles, 4:5 image, price prominent, small rating; one data-driven "Bestseller" tag only.
-- **Product detail** — sticky gallery left + scrollable info right (desktop), single column mobile with sticky bottom Add to Cart; breadcrumb Home > Products > {title}; large price + rating; tabs Description/Specifications/Reviews; "Add to Cart" (teal) with local feedback (button → "Added ✓" state + small count), "Add to Wishlist" (ghost) as a local toggle; long description ~65ch; real metadata (brand/stock/warranty/shipping).
+- **Login**: reference's centered card on neutral chalk, faint oversized cropped "ShopFlow" wordmark ghost behind it; at ≥1024px a split panel (form left, one transparent product cutout + one brand line right). Inputs sharp, teal `:focus-visible` 2px ring. "Login with Google" / "Forgot password?" / "Sign up" rendered at reduced opacity with a visible "demo" tag + `aria-disabled` + `title`, so they are obviously inert. Demo credentials in a small bordered note under the form.
+- **Home**: sticky navbar (solid surface tone, subtle shadow on scroll, Sora wordmark, Home/Products links, dark-mode toggle, logout ghost button). No search/cart icons in the navbar (non-functional noise). Hero = **3 typographic color-block slides** (teal field · deep-ink panel · warm-sand panel), each a distinct editorial campaign with a large Sora headline left, one short line, one CTA, and a transparent product cutout anchored right. Autoplay ~6s, prev/next + dots, visible pause/play, stops on hover/focus, static under `prefers-reduced-motion`. Below: "Featured Products" = asymmetric **featured-first bento** (one large tile + staggered cards) over a clean repeatable card unit; borderless cards on warm-gray tiles, 4:5 image, price prominent, small rating; one data-driven "Bestseller" tag only.
+- **Product detail**: sticky gallery left + scrollable info right (desktop), single column mobile with sticky bottom Add to Cart; breadcrumb Home > Products > {title}; large price + rating; tabs Description/Specifications/Reviews; "Add to Cart" (teal) with local feedback (button → "Added ✓" state + small count), "Add to Wishlist" (ghost) as a local toggle; long description ~65ch; real metadata (brand/stock/warranty/shipping).
 
 ## Motion
 
@@ -53,7 +53,7 @@ CSS-only transform/opacity. 150ms hover, 200ms opacity, 300ms panel/slide; one o
 
 ## Anti-slop self-review (what changed vs defaults)
 
-- Palette: neutral chalk + **deep petrol teal** accent + sans type — clears cream+serif+sage, yellow-cream+terracotta, cobalt, and near-black+acid-green.
+- Palette: neutral chalk + **deep petrol teal** accent + sans type: clears cream+serif+sage, yellow-cream+terracotta, cobalt, and near-black+acid-green.
 - Type: Sora + Plus Jakarta Sans (not Inter/Roboto/Poppins); no monospace labels.
 - Grid: bento first row, not uniform identical icon-cards; borderless product cards on rounded tiles with a soft lift on hover.
 - Hero: typographic color-block, not "image + centered tagline" or full-bleed photo; no backdrop blur.

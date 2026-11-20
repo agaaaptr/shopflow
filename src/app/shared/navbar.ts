@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, computed, inject, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, HostListener, computed, inject, signal, viewChild } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
@@ -15,7 +15,7 @@ import { CartService } from '../core/cart.service';
       style="background: var(--surface); border-bottom: 1px solid var(--line)"
     >
       <div class="container-page flex h-16 items-center justify-between gap-3">
-        <a routerLink="/home" class="flex shrink-0 items-center gap-2" aria-label="ShopFlow — home">
+        <a routerLink="/home" class="flex shrink-0 items-center gap-2" aria-label="ShopFlow home">
           <span
             class="grid h-8 w-8 place-items-center rounded-full font-display text-sm font-bold text-white"
             style="background: var(--accent-bg)"
@@ -248,9 +248,14 @@ export class Navbar {
   readonly query = signal('');
   readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
-  readonly url = signal(this.router.url);
-  readonly onHome = computed(() => this.url() === '/home');
-  readonly onProducts = computed(() => this.url().startsWith('/product'));
+  readonly url = signal(pathOf(this.router.url));
+  readonly fragment = signal(typeof window !== 'undefined' ? window.location.hash : '');
+  readonly onHome = computed(() => this.url() === '/home' && this.fragment() !== '#featured');
+  readonly onProducts = computed(
+    () =>
+      this.url().startsWith('/product') ||
+      (this.url() === '/home' && this.fragment() === '#featured'),
+  );
   readonly onCategories = computed(() => this.url() === '/categories');
   readonly onAbout = computed(() => this.url() === '/about');
   readonly initial = computed(() =>
@@ -258,13 +263,23 @@ export class Navbar {
   );
 
   constructor() {
+    const destroyRef = inject(DestroyRef);
+    const onHashChange = () => this.fragment.set(window.location.hash);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('hashchange', onHashChange);
+      destroyRef.onDestroy(() => window.removeEventListener('hashchange', onHashChange));
+    }
+
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
         takeUntilDestroyed(),
       )
       .subscribe((event) => {
-        this.url.set((event as NavigationEnd).urlAfterRedirects);
+        const full = (event as NavigationEnd).urlAfterRedirects;
+        const hashIndex = full.indexOf('#');
+        this.url.set(pathOf(full));
+        this.fragment.set(hashIndex === -1 ? '' : full.slice(hashIndex));
         this.searchOpen.set(false);
         this.cartOpen.set(false);
         this.profileOpen.set(false);
@@ -342,4 +357,10 @@ export class Navbar {
       maximumFractionDigits: 2,
     });
   }
+}
+
+/** Returns the pathname of a URL, without query string or fragment. */
+function pathOf(url: string): string {
+  const withoutHash = url.indexOf('#') === -1 ? url : url.slice(0, url.indexOf('#'));
+  return withoutHash.indexOf('?') === -1 ? withoutHash : withoutHash.slice(0, withoutHash.indexOf('?'));
 }

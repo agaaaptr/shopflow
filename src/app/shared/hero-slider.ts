@@ -1,11 +1,12 @@
 import { Component, DestroyRef, effect, inject, input, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 export interface Slide {
   kicker: string;
   title: string;
   line: string;
   cta: string;
-  href: string;
+  cat: string | null;
   image: string;
   imageAlt: string;
   panel: 'accent' | 'ink' | 'sand';
@@ -13,6 +14,7 @@ export interface Slide {
 
 @Component({
   selector: 'app-hero-slider',
+  imports: [RouterLink],
   template: `
     <section
       class="container-page pt-6"
@@ -71,7 +73,9 @@ export interface Slide {
                 </h2>
                 <p class="mt-4 max-w-sm text-base" style="opacity: 0.92">{{ slide.line }}</p>
                 <a
-                  [href]="slide.href"
+                  [routerLink]="['/home']"
+                  [queryParams]="slide.cat ? { cat: slide.cat } : {}"
+                  fragment="featured"
                   class="btn mt-7"
                   [style.background]="slide.panel === 'sand' ? '#1a1a18' : '#ffffff'"
                   [style.color]="slide.panel === 'sand' ? '#ffffff' : '#1a1a18'"

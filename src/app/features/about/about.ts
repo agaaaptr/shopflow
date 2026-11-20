@@ -40,8 +40,8 @@ import { Footer } from '../../shared/footer';
         </p>
         <p class="mt-4 leading-relaxed text-ink-muted">
           We keep the catalog short and legible. Every item is checked against its category, rating,
-          and stock before it shows up, and the details we'd want before buying — warranty, returns,
-          shipping — live right on the product page.
+          and stock before it shows up, and the details we'd want before buying: warranty, returns,
+          and shipping live right on the product page.
         </p>
       </section>
 
@@ -64,7 +64,7 @@ import { Footer } from '../../shared/footer';
           <div class="rounded-2xl border p-6" style="border-color: var(--line); background: var(--surface)">
             <p class="font-display font-semibold">Demo-first</p>
             <p class="mt-2 text-sm text-ink-muted">
-              This is a demonstration store — checkout and payments aren't wired up.
+              This is a demonstration store; checkout and payments aren't wired up.
             </p>
           </div>
         </div>
