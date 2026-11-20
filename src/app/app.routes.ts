@@ -14,6 +14,13 @@ export const routes: Routes = [
     loadComponent: () => import('./features/home/home').then((m) => m.Home),
   },
   {
+    path: 'products',
+    title: 'Products · ShopFlow',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/products/products').then((m) => m.Products),
+  },
+  {
     path: 'product/:id',
     title: 'Product · ShopFlow',
     canActivate: [authGuard],

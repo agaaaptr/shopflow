@@ -40,7 +40,7 @@ interface CategoryTile {
         <div class="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
           @for (tile of tiles(); track tile.slug; let i = $index) {
             <a
-              [routerLink]="['/home']"
+              [routerLink]="['/products']"
               [queryParams]="{ cat: tile.slug }"
               [class]="tileClass(i)"
               [attr.aria-label]="tile.label + ', ' + tile.count + ' products'"

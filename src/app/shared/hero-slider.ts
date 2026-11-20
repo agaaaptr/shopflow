@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, computed, effect, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 export interface Slide {
@@ -73,9 +73,8 @@ export interface Slide {
                 </h2>
                 <p class="mt-4 max-w-sm text-base" style="opacity: 0.92">{{ slide.line }}</p>
                 <a
-                  [routerLink]="['/home']"
+                  [routerLink]="['/products']"
                   [queryParams]="slide.cat ? { cat: slide.cat } : {}"
-                  fragment="featured"
                   class="btn mt-7"
                   [style.background]="slide.panel === 'sand' ? '#1a1a18' : '#ffffff'"
                   [style.color]="slide.panel === 'sand' ? '#ffffff' : '#1a1a18'"
@@ -98,20 +97,23 @@ export interface Slide {
       </div>
 
       <div class="mt-4 flex items-center justify-between">
-        <div class="flex items-center gap-1" role="group" aria-label="Choose slide">
+        <div class="flex w-56 items-center gap-1.5" role="group" aria-label="Choose slide">
           @for (slide of slides(); track slide.title; let i = $index) {
             <button
               type="button"
-              class="grid h-11 w-11 place-items-center"
+              class="relative h-1.5 flex-1 overflow-hidden rounded-full"
+              style="background: var(--line)"
               [attr.aria-label]="'Go to slide ' + (i + 1)"
               [attr.aria-current]="i === index() ? 'true' : null"
               (click)="goTo(i)"
             >
-              <span
-                class="h-2.5 w-2.5 rounded-full transition-all"
-                [style.background]="i === index() ? 'var(--accent)' : 'var(--line)'"
-                [style.width]="i === index() ? '24px' : '10px'"
-              ></span>
+              @if (i === index()) {
+                <span
+                  class="absolute inset-y-0 left-0 rounded-full"
+                  style="background: var(--accent); animation: hero-fill 4000ms linear"
+                  [style.animation-play-state]="paused() ? 'paused' : 'running'"
+                ></span>
+              }
             </button>
           }
         </div>
@@ -151,6 +153,9 @@ export class HeroSlider {
   readonly focused = signal(false);
   /** Bumped on manual navigation so the autoplay timer restarts from zero. */
   readonly resetTick = signal(0);
+  readonly paused = computed(
+    () => this.hovering() || this.focused() || !this.playing(),
+  );
 
   private timer: ReturnType<typeof setInterval> | null = null;
 

@@ -1,0 +1,89 @@
+<app-navbar />
+
+<main class="container-page pb-16 pt-6">
+  <div class="fade-up">
+    <h1 class="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+      {{ categoryLabel() ?? 'All Products' }}
+    </h1>
+    <p class="mt-2 text-ink-muted">
+      @if (query()) {
+        Results for <span class="font-medium text-accent">“{{ query() }}”</span>
+      } @else {
+        Browse every piece in our fashion collection.
+      }
+    </p>
+  </div>
+
+  <nav class="no-scrollbar mt-6 flex gap-2 overflow-x-auto pb-2" aria-label="Filter by category">
+    <a routerLink="/products" [class]="chipClass('')" [attr.aria-current]="!cat() ? 'page' : null">All</a>
+    @for (slug of categories; track slug) {
+      <a
+        [routerLink]="['/products']"
+        [queryParams]="{ cat: slug }"
+        [class]="chipClass(slug)"
+        [attr.aria-current]="cat() === slug ? 'page' : null"
+      >
+        {{ categoryName(slug) }}
+      </a>
+    }
+  </nav>
+
+  @if (list.isLoading()) {
+    <div
+      class="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4"
+      aria-busy="true"
+      aria-label="Loading products"
+    >
+      @for (n of skeletons; track n) {
+        <div>
+          <div class="skeleton aspect-[4/5] rounded-2xl"></div>
+          <div class="skeleton mt-3 h-4 w-3/4"></div>
+          <div class="skeleton mt-2 h-3 w-1/3"></div>
+        </div>
+      }
+    </div>
+  } @else if (list.error()) {
+    <div class="mt-8 rounded-2xl border p-10 text-center" style="border-color: var(--line)" role="alert">
+      <p class="font-display text-lg font-semibold">We couldn't load products</p>
+      <p class="mt-1 text-sm text-ink-muted">Check your connection and try again.</p>
+      <button type="button" class="btn btn-primary mt-5" (click)="reload()">Retry</button>
+    </div>
+  } @else if (visible().length === 0) {
+    <div class="mt-8 rounded-2xl border p-10 text-center" style="border-color: var(--line)">
+      @if (query()) {
+        <p class="font-display text-lg font-semibold">No products match “{{ query() }}”</p>
+        <p class="mt-1 text-sm text-ink-muted">Try a different search term.</p>
+      } @else if (categoryLabel()) {
+        <p class="font-display text-lg font-semibold">No products in {{ categoryLabel() }}</p>
+        <p class="mt-1 text-sm text-ink-muted">Try another category.</p>
+      } @else {
+        <p class="font-display text-lg font-semibold">No products to show</p>
+        <p class="mt-1 text-sm text-ink-muted">Try reloading the collection.</p>
+      }
+      <a routerLink="/products" class="btn btn-outline mt-5">Clear filters</a>
+    </div>
+  } @else {
+    <div class="mt-6 flex items-center justify-between text-sm text-ink-muted">
+      <span>Showing {{ visible().length }} of {{ matching().length }} products</span>
+      @if (query() || categoryLabel()) {
+        <a routerLink="/products" class="hover:text-ink">Clear filters</a>
+      }
+    </div>
+
+    <div class="mt-4 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
+      @for (product of visible(); track product.id) {
+        <app-product-card [product]="product" />
+      }
+    </div>
+
+    @if (hasMore()) {
+      <div class="mt-10 text-center">
+        <button type="button" class="btn btn-outline" (click)="loadMore()">
+          Load more ({{ matching().length - visible().length }} remaining)
+        </button>
+      </div>
+    }
+  }
+</main>
+
+<app-footer />

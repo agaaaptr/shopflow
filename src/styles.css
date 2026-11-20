@@ -321,6 +321,23 @@
       transform: scale(1);
     }
   }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  @keyframes hero-fill {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
 }
 
 /* ---- page transitions (View Transitions API): must be global ---- */

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, HostListener, computed, inject, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, computed, inject, signal, viewChild } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
@@ -39,8 +39,7 @@ import { CartService } from '../core/cart.service';
             }
           </a>
           <a
-            routerLink="/home"
-            fragment="featured"
+            routerLink="/products"
             class="relative py-1 text-sm font-medium transition-colors"
             [class]="onProducts() ? 'text-ink' : 'text-ink-muted hover:text-ink'"
           >
@@ -249,12 +248,9 @@ export class Navbar {
   readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
   readonly url = signal(pathOf(this.router.url));
-  readonly fragment = signal(typeof window !== 'undefined' ? window.location.hash : '');
-  readonly onHome = computed(() => this.url() === '/home' && this.fragment() !== '#featured');
+  readonly onHome = computed(() => this.url() === '/home');
   readonly onProducts = computed(
-    () =>
-      this.url().startsWith('/product') ||
-      (this.url() === '/home' && this.fragment() === '#featured'),
+    () => this.url() === '/products' || this.url().startsWith('/product'),
   );
   readonly onCategories = computed(() => this.url() === '/categories');
   readonly onAbout = computed(() => this.url() === '/about');
@@ -263,23 +259,13 @@ export class Navbar {
   );
 
   constructor() {
-    const destroyRef = inject(DestroyRef);
-    const onHashChange = () => this.fragment.set(window.location.hash);
-    if (typeof window !== 'undefined') {
-      window.addEventListener('hashchange', onHashChange);
-      destroyRef.onDestroy(() => window.removeEventListener('hashchange', onHashChange));
-    }
-
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
         takeUntilDestroyed(),
       )
       .subscribe((event) => {
-        const full = (event as NavigationEnd).urlAfterRedirects;
-        const hashIndex = full.indexOf('#');
-        this.url.set(pathOf(full));
-        this.fragment.set(hashIndex === -1 ? '' : full.slice(hashIndex));
+        this.url.set(pathOf((event as NavigationEnd).urlAfterRedirects));
         this.searchOpen.set(false);
         this.cartOpen.set(false);
         this.profileOpen.set(false);
@@ -329,7 +315,7 @@ export class Navbar {
     const raw = this.searchInput()?.nativeElement.value ?? this.query();
     const q = raw.trim();
     this.searchOpen.set(false);
-    void this.router.navigate(['/home'], { queryParams: q ? { q } : {} });
+    void this.router.navigate(['/products'], { queryParams: q ? { q } : {} });
   }
 
   toggleTheme(): void {

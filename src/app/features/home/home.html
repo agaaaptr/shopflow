@@ -6,38 +6,10 @@
   <section id="featured" class="container-page mt-16 scroll-mt-24">
     <div class="fade-up flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">
-          {{ categoryLabel() ? categoryLabel() : 'Featured Products' }}
-        </h2>
-        <p class="mt-1 text-sm text-ink-muted">
-          {{
-            categoryLabel()
-              ? 'Curated picks from this category.'
-              : 'The highest-rated pieces from our fashion collection.'
-          }}
-        </p>
-        @if (query() || categoryLabel()) {
-          <p class="mt-2 flex flex-wrap items-center gap-2 text-sm">
-            @if (query()) {
-              <span>Results for <span class="font-medium text-accent">“{{ query() }}”</span></span>
-            }
-            @if (categoryLabel()) {
-              <span>Category <span class="font-medium text-accent">{{ categoryLabel() }}</span></span>
-            }
-            <a
-              routerLink="/home"
-              class="rounded-full border px-3 py-1 text-xs text-ink-muted transition-colors hover:text-ink"
-              style="border-color: var(--line)"
-              >Clear</a
-            >
-          </p>
-        }
+        <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">Featured Products</h2>
+        <p class="mt-1 text-sm text-ink-muted">The highest-rated pieces from our fashion collection.</p>
       </div>
-      @if (!list.isLoading()) {
-        <p class="text-sm text-ink-muted">
-          Showing {{ featured().length }} of {{ matching().length }} products
-        </p>
-      }
+      <a routerLink="/products" class="btn btn-ghost shrink-0">View all products</a>
     </div>
 
     @if (list.isLoading()) {
@@ -62,32 +34,16 @@
       </div>
     } @else if (featured().length === 0) {
       <div class="mt-8 rounded-2xl border p-10 text-center" style="border-color: var(--line)">
-        @if (query()) {
-          <p class="font-display text-lg font-semibold">No products match “{{ query() }}”</p>
-          <p class="mt-1 text-sm text-ink-muted">Try a different search term.</p>
-        } @else if (categoryLabel()) {
-          <p class="font-display text-lg font-semibold">No products in {{ categoryLabel() }}</p>
-          <p class="mt-1 text-sm text-ink-muted">Try another category.</p>
-        } @else {
-          <p class="font-display text-lg font-semibold">No products to show</p>
-          <p class="mt-1 text-sm text-ink-muted">Try reloading the collection.</p>
-        }
-        <a routerLink="/home" class="btn btn-outline mt-5">Clear</a>
+        <p class="font-display text-lg font-semibold">No products to show</p>
+        <p class="mt-1 text-sm text-ink-muted">Try reloading the collection.</p>
+        <button type="button" class="btn btn-outline mt-5" (click)="reload()">Reload</button>
       </div>
     } @else {
       <div class="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
         @for (product of featured(); track product.id; let i = $index) {
-          <app-product-card [product]="product" [badge]="i === 0 && !query() ? 'Bestseller' : null" />
+          <app-product-card [product]="product" [badge]="i === 0 ? 'Bestseller' : null" />
         }
       </div>
-
-      @if (hasMore()) {
-        <div class="mt-10 text-center">
-          <button type="button" class="btn btn-outline" (click)="loadMore()">
-            Load more ({{ matching().length - featured().length }} remaining)
-          </button>
-        </div>
-      }
     }
   </section>
 </main>

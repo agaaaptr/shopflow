@@ -20,7 +20,7 @@ import { RouterLink } from '@angular/router';
           <p class="text-sm font-semibold">Explore</p>
           <ul class="mt-3 space-y-2 text-sm text-ink-muted">
             <li><a routerLink="/home" class="hover:text-ink">Home</a></li>
-            <li><a routerLink="/home" fragment="featured" class="hover:text-ink">Products</a></li>
+            <li><a routerLink="/products" class="hover:text-ink">Products</a></li>
             <li><a routerLink="/categories" class="hover:text-ink">Categories</a></li>
             <li><a routerLink="/about" class="hover:text-ink">About</a></li>
           </ul>
