@@ -30,7 +30,7 @@
       </div>
     </div>
   } @else if (product.error()) {
-    <div class="mt-10 border p-10 text-center" style="border-color: var(--line)" role="alert">
+    <div class="mt-10 rounded-2xl border p-10 text-center" style="border-color: var(--line)" role="alert">
       @if (product.statusCode() === 404) {
         <p class="font-display text-lg font-semibold">Product not found</p>
         <p class="mt-1 text-sm text-ink-muted">
@@ -78,7 +78,7 @@
       <!-- Info -->
       <div>
         <p class="text-sm capitalize text-ink-muted">{{ p.brand ?? p.category }}</p>
-        <h1 class="mt-2 font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
+        <h1 class="mt-2 break-words font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
           {{ p.title }}
         </h1>
 
@@ -92,7 +92,6 @@
             {{ p.rating.toFixed(1) }}
           </span>
           <span class="text-ink-muted">({{ p.reviews?.length ?? 0 }} reviews)</span>
-          <span aria-hidden="true" class="text-ink-muted">·</span>
           <span [style.color]="p.stock > 0 ? 'var(--ok)' : 'var(--danger)'">
             {{ p.stock > 0 ? 'In stock' : 'Out of stock' }}
           </span>
@@ -200,7 +199,7 @@
               [attr.aria-pressed]="tab() === 'reviews'"
               (click)="tab.set('reviews')"
             >
-              Reviews
+              Reviews ({{ p.reviews?.length ?? 0 }})
             </button>
           </div>
 
@@ -211,7 +210,7 @@
                 @if (p.tags?.length) {
                   <ul class="mt-4 flex flex-wrap gap-2">
                     @for (tag of p.tags; track tag) {
-                      <li class="border px-2 py-1 text-xs text-ink-muted" style="border-color: var(--line)">
+                      <li class="rounded-full border px-2.5 py-1 text-xs text-ink-muted" style="border-color: var(--line)">
                         {{ tag }}
                       </li>
                     }
@@ -259,12 +258,12 @@
                 @if (p.reviews?.length) {
                   <ul class="space-y-3">
                     @for (review of p.reviews; track review.reviewerEmail + review.date) {
-                      <li class="border p-4" style="border-color: var(--line)">
+                      <li class="rounded-2xl border p-4" style="border-color: var(--line)">
                         <div class="flex items-center justify-between gap-3">
-                          <span class="font-medium text-ink">{{ review.reviewerName }}</span>
+                          <span class="min-w-0 truncate font-medium text-ink">{{ review.reviewerName }}</span>
                           <span class="text-xs text-ink-muted">★ {{ review.rating.toFixed(1) }}</span>
                         </div>
-                        <p class="mt-1 text-ink-muted">{{ review.comment }}</p>
+                        <p class="mt-1 break-words text-ink-muted">{{ review.comment }}</p>
                         <p class="mt-1 text-xs text-ink-muted">{{ review.date.slice(0, 10) }}</p>
                       </li>
                     }

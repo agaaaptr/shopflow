@@ -21,6 +21,8 @@ import { RouterLink } from '@angular/router';
           <ul class="mt-3 space-y-2 text-sm text-ink-muted">
             <li><a routerLink="/home" class="hover:text-ink">Home</a></li>
             <li><a routerLink="/home" fragment="featured" class="hover:text-ink">Products</a></li>
+            <li><a routerLink="/categories" class="hover:text-ink">Categories</a></li>
+            <li><a routerLink="/about" class="hover:text-ink">About</a></li>
           </ul>
         </div>
 
@@ -53,11 +55,11 @@ import { RouterLink } from '@angular/router';
         <div
           class="container-page flex flex-col items-start justify-between gap-2 py-5 text-xs text-ink-muted sm:flex-row sm:items-center"
         >
-          <span>© 2024 ShopFlow. Demo project — not a real store.</span>
+          <span>© 2026 ShopFlow. Demo project — not a real store.</span>
           <span>Built for a front-end technical assessment.</span>
         </div>
       </div>
     </footer>
   `,
 })
-export class Footer {}
+export class Footer { }

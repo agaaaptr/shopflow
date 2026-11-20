@@ -42,7 +42,6 @@ import { Product } from '../core/models';
               />
             </svg>
             <span class="shrink-0">{{ product().rating.toFixed(1) }}</span>
-            <span aria-hidden="true" class="shrink-0">·</span>
             <span class="min-w-0 truncate capitalize">{{ prettyCategory() }}</span>
           </p>
         </div>

@@ -1,6 +1,6 @@
 # ShopFlow — Angular e-commerce demo
 
-A small, polished e-commerce front-end built for a front-end technical assessment. Three screens — sign-in, home (hero slider + product grid), and product detail — on Angular 22 + Tailwind CSS v4, with all data coming from the public dummyjson API.
+A small, polished e-commerce front-end built for a front-end technical assessment — sign-in, home (hero slider + product grid), product detail, categories, and about — on Angular 22 + Tailwind CSS v4, with all data coming from the public dummyjson API.
 
 ![Home](screenshots/home.png)
 
@@ -9,7 +9,10 @@ A small, polished e-commerce front-end built for a front-end technical assessmen
 - **Sign in** with a validated form wired to `dummyjson /auth/login`: inline errors, pending state, and return-to-origin after redirect.
 - **Protected routes** — home and product detail are guarded; anonymous visitors are sent to sign-in and returned after logging in.
 - **Home** — one accessible hero slider (pause/play, dots, arrows, reduced-motion) and a curated grid of fashion products.
-- **Product detail** — a real product by id (deep-link and refresh safe): gallery, price/rating/stock, description/specifications/reviews, add-to-cart feedback, wishlist toggle.
+- **Product detail** — a real product by id (deep-link and refresh safe): gallery, price/rating/stock, color swatches + quantity, description/specifications/reviews, add-to-cart feedback, wishlist toggle.
+- **Search, cart, and profile** in the navbar — search filters the grid, cart tracks selections in-memory, profile shows the signed-in account.
+- **Categories** — a tile grid of the fashion categories with live product counts; each tile filters home by category.
+- **About** — a short brand story, values, and how-it-works.
 - **Logout**, a **dark-mode** toggle (persisted), loading/error/empty states everywhere, keyboard and screen-reader support.
 
 ## Demo credentials
@@ -44,9 +47,9 @@ npm test         # unit tests (Vitest)
 
 ```
 src/app/
-  core/        auth service, guard, interceptor, product service, models
+  core/        auth service, guard, interceptor, product + cart services, models, categories
   shared/      navbar, footer, hero slider, product card
-  features/    login, home, product detail
+  features/    login, home, product detail, categories, about
   app.routes   lazy routes with guards
 ```
 
@@ -76,7 +79,7 @@ Sign-up, Google OAuth, password reset, cart/checkout, payments, and server-side 
 
 ## Screenshots
 
-| Login | Home | Detail |
-| --- | --- | --- |
-| ![Login](screenshots/login.png) | ![Home](screenshots/home.png) | ![Detail](screenshots/product.png) |
-| ![Home dark](screenshots/home-dark.png) | ![Home mobile](screenshots/home-mobile.png) | ![Login dark](screenshots/login-dark.png) |
+| Login | Home | Product | Categories | About |
+| --- | --- | --- | --- | --- |
+| ![Login](screenshots/login.png) | ![Home](screenshots/home.png) | ![Product](screenshots/product.png) | ![Categories](screenshots/categories.png) | ![About](screenshots/about.png) |
+| ![Login dark](screenshots/login-dark.png) | ![Home dark](screenshots/home-dark.png) | ![Home mobile](screenshots/home-mobile.png) | | |

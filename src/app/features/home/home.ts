@@ -4,23 +4,11 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { ProductService } from '../../core/product.service';
 import { Product } from '../../core/models';
+import { CATEGORY_LABELS, FASHION_SET } from '../../core/categories';
 import { Navbar } from '../../shared/navbar';
 import { Footer } from '../../shared/footer';
 import { HeroSlider, Slide } from '../../shared/hero-slider';
 import { ProductCard } from '../../shared/product-card';
-
-const FASHION_CATEGORIES = new Set([
-  'mens-shirts',
-  'mens-shoes',
-  'mens-watches',
-  'womens-bags',
-  'womens-dresses',
-  'womens-shoes',
-  'womens-watches',
-  'womens-jewellery',
-  'sunglasses',
-  'tops',
-]);
 
 const CDN = 'https://cdn.dummyjson.com/product-images';
 
@@ -40,6 +28,18 @@ export class Home {
     this.route.queryParamMap.pipe(map((params) => (params.get('q') ?? '').trim().toLowerCase())),
     { initialValue: '' },
   );
+
+  readonly cat = toSignal(
+    this.route.queryParamMap.pipe(map((params) => params.get('cat') ?? '')),
+    { initialValue: '' },
+  );
+
+  readonly categoryLabel = computed(() => {
+    const cat = this.cat();
+    return cat && (CATEGORY_LABELS as Record<string, string>)[cat]
+      ? (CATEGORY_LABELS as Record<string, string>)[cat]
+      : null;
+  });
 
   readonly slides: Slide[] = [
     {
@@ -74,11 +74,13 @@ export class Home {
     },
   ];
 
-  readonly featured = computed<Product[]>(() => {
+  readonly matching = computed<Product[]>(() => {
     const q = this.query();
+    const cat = this.cat();
     return this.list
       .value()
-      .products.filter((product) => FASHION_CATEGORIES.has(product.category))
+      .products.filter((product) => FASHION_SET.has(product.category))
+      .filter((product) => !cat || product.category === cat)
       .filter(
         (product) =>
           !q ||
@@ -86,9 +88,10 @@ export class Home {
           (product.brand ?? '').toLowerCase().includes(q) ||
           product.category.replace(/-/g, ' ').includes(q),
       )
-      .sort((a, b) => b.rating - a.rating || a.title.localeCompare(b.title))
-      .slice(0, 12);
+      .sort((a, b) => b.rating - a.rating || a.title.localeCompare(b.title));
   });
+
+  readonly featured = computed<Product[]>(() => this.matching().slice(0, 12));
 
   reload(): void {
     this.list.reload();

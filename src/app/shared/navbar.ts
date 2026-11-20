@@ -49,6 +49,26 @@ import { CartService } from '../core/cart.service';
               <span class="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full" style="background: var(--accent)"></span>
             }
           </a>
+          <a
+            routerLink="/categories"
+            class="relative py-1 text-sm font-medium transition-colors"
+            [class]="onCategories() ? 'text-ink' : 'text-ink-muted hover:text-ink'"
+          >
+            Categories
+            @if (onCategories()) {
+              <span class="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full" style="background: var(--accent)"></span>
+            }
+          </a>
+          <a
+            routerLink="/about"
+            class="relative py-1 text-sm font-medium transition-colors"
+            [class]="onAbout() ? 'text-ink' : 'text-ink-muted hover:text-ink'"
+          >
+            About
+            @if (onAbout()) {
+              <span class="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full" style="background: var(--accent)"></span>
+            }
+          </a>
         </nav>
 
         <div class="flex items-center gap-1.5">
@@ -108,11 +128,13 @@ import { CartService } from '../core/cart.service';
               }
             </button>
 
-            @if (cartOpen()) {
-              <div
-                class="absolute right-0 top-12 z-50 w-80 rounded-2xl border p-4 shadow-lg max-sm:fixed max-sm:inset-x-4 max-sm:top-20 max-sm:w-auto"
-                style="background: var(--surface); border-color: var(--line); box-shadow: var(--shadow-float)"
-              >
+            <div
+              class="popover w-80 rounded-2xl border p-4 shadow-lg"
+              [class.open]="cartOpen()"
+              [inert]="!cartOpen()"
+              [attr.aria-hidden]="cartOpen() ? null : 'true'"
+              style="background: var(--surface); border-color: var(--line); box-shadow: var(--shadow-float)"
+            >
                 <p class="font-display font-semibold">Your cart</p>
                 @if (cart.items().length === 0) {
                   <p class="mt-3 text-sm text-ink-muted">
@@ -147,11 +169,10 @@ import { CartService } from '../core/cart.service';
                     <span class="price">\${{ money(cart.total()) }}</span>
                   </div>
                 }
-                <p class="mt-3 rounded-lg px-3 py-2 text-xs" style="background: var(--tile); color: var(--ink-muted)">
+                <p class="mt-3 rounded-xl px-3 py-2 text-xs" style="background: var(--tile); color: var(--ink-muted)">
                   Checkout is disabled in this demo.
                 </p>
-              </div>
-            }
+            </div>
           </div>
 
           <div class="relative">
@@ -170,18 +191,19 @@ import { CartService } from '../core/cart.service';
               >
             </button>
 
-            @if (profileOpen()) {
-              <div
-                class="absolute right-0 top-12 z-50 w-60 rounded-2xl border p-4 shadow-lg max-sm:fixed max-sm:inset-x-4 max-sm:top-20 max-sm:w-auto"
-                style="background: var(--surface); border-color: var(--line); box-shadow: var(--shadow-float)"
-              >
+            <div
+              class="popover w-60 rounded-2xl border p-4 shadow-lg"
+              [class.open]="profileOpen()"
+              [inert]="!profileOpen()"
+              [attr.aria-hidden]="profileOpen() ? null : 'true'"
+              style="background: var(--surface); border-color: var(--line); box-shadow: var(--shadow-float)"
+            >
                 @if (user(); as u) {
                   <p class="break-words font-semibold">{{ u.firstName }} {{ u.lastName }}</p>
                   <p class="break-words text-sm text-ink-muted">{{ u.email }}</p>
                 }
                 <button type="button" class="btn btn-outline mt-3 w-full" (click)="logout()">Logout</button>
-              </div>
-            }
+            </div>
           </div>
         </div>
       </div>
@@ -229,6 +251,8 @@ export class Navbar {
   readonly url = signal(this.router.url);
   readonly onHome = computed(() => this.url() === '/home');
   readonly onProducts = computed(() => this.url().startsWith('/product'));
+  readonly onCategories = computed(() => this.url() === '/categories');
+  readonly onAbout = computed(() => this.url() === '/about');
   readonly initial = computed(() =>
     (this.auth.user()?.firstName ?? 'G').charAt(0).toUpperCase(),
   );

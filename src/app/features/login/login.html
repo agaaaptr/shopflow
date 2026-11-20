@@ -1,20 +1,14 @@
 <div class="min-h-screen lg:grid lg:grid-cols-2">
   <!-- Form panel -->
-  <div class="relative flex min-h-screen flex-col justify-center overflow-hidden px-5 py-12 sm:px-8 lg:min-h-0 lg:px-12">
-    <span
-      aria-hidden="true"
-      class="pointer-events-none absolute inset-0 flex select-none items-center justify-center font-display text-[24vw] font-extrabold leading-none text-ink/[0.04] lg:text-[15vw]"
-      >ShopFlow</span
-    >
+  <div
+    class="relative flex min-h-screen flex-col justify-center overflow-hidden px-5 py-12 sm:px-8 lg:min-h-0 lg:px-12">
+    <span aria-hidden="true"
+      class="pointer-events-none absolute inset-0 flex select-none items-center justify-center font-display text-[24vw] font-extrabold leading-none text-ink/[0.04] lg:text-[15vw]">ShopFlow</span>
 
     <div class="fade-up relative mx-auto w-full max-w-sm">
       <div class="mb-10 inline-flex items-center gap-2">
-        <span
-          class="grid h-8 w-8 place-items-center font-display text-sm font-bold text-white"
-          style="background: var(--accent-bg)"
-          aria-hidden="true"
-          >S</span
-        >
+        <span class="grid h-8 w-8 place-items-center font-display text-sm font-bold text-white"
+          style="background: var(--accent-bg)" aria-hidden="true">S</span>
         <span class="font-display text-xl font-bold tracking-tight">
           Shop<span class="text-accent">Flow</span>
         </span>
@@ -25,132 +19,78 @@
 
       <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="mt-8 space-y-4">
         @if (errorMessage(); as msg) {
-          <p
-            role="alert"
-            class="border px-3 py-2 text-sm"
-            style="
+        <p role="alert" class="rounded-xl border px-3 py-2 text-sm" style="
               border-color: color-mix(in oklab, var(--danger), transparent 55%);
               background: color-mix(in oklab, var(--danger), transparent 92%);
               color: var(--danger);
-            "
-          >
-            {{ msg }}
-          </p>
+            ">
+          {{ msg }}
+        </p>
         }
 
         <div>
           <label for="username" class="mb-1.5 block text-sm font-medium">Username</label>
-          <input
-            id="username"
-            type="text"
-            formControlName="username"
-            class="input"
-            autocomplete="username"
-            placeholder="emilys"
-            [attr.aria-invalid]="showError('username')"
-            [attr.aria-describedby]="showError('username') ? 'username-error' : null"
-          />
+          <input id="username" type="text" formControlName="username" class="input" autocomplete="username"
+            placeholder="emilys" [attr.aria-invalid]="showError('username')"
+            [attr.aria-describedby]="showError('username') ? 'username-error' : null" />
           @if (showError('username')) {
-            <p id="username-error" class="mt-1.5 text-sm" style="color: var(--danger)">
-              Enter your username (at least 3 characters).
-            </p>
+          <p id="username-error" class="mt-1.5 text-sm" style="color: var(--danger)">
+            Enter your username (at least 3 characters).
+          </p>
           }
         </div>
 
         <div>
           <div class="mb-1.5 flex items-center justify-between">
             <label for="password" class="text-sm font-medium">Password</label>
-            <button
-              type="button"
-              class="text-sm text-ink-muted opacity-60"
-              disabled
-              aria-disabled="true"
-              title="Demo — not implemented"
-            >
+            <button type="button" class="text-sm text-ink-muted opacity-60" disabled aria-disabled="true"
+              title="Demo — not implemented">
               Forgot password?
             </button>
           </div>
-          <input
-            id="password"
-            type="password"
-            formControlName="password"
-            class="input"
-            autocomplete="current-password"
-            placeholder="••••••••"
-            [attr.aria-invalid]="showError('password')"
-            [attr.aria-describedby]="showError('password') ? 'password-error' : null"
-          />
+          <input id="password" type="password" formControlName="password" class="input" autocomplete="current-password"
+            placeholder="••••••••" [attr.aria-invalid]="showError('password')"
+            [attr.aria-describedby]="showError('password') ? 'password-error' : null" />
           @if (showError('password')) {
-            <p id="password-error" class="mt-1.5 text-sm" style="color: var(--danger)">
-              Enter your password.
-            </p>
+          <p id="password-error" class="mt-1.5 text-sm" style="color: var(--danger)">
+            Enter your password.
+          </p>
           }
         </div>
 
         <label class="flex cursor-pointer items-center gap-2 text-sm text-ink-muted">
-          <input
-            type="checkbox"
-            formControlName="remember"
-            class="h-4 w-4"
-            style="accent-color: var(--accent)"
-          />
+          <input type="checkbox" formControlName="remember" class="h-4 w-4" style="accent-color: var(--accent)" />
           Remember me
         </label>
 
         <button type="submit" class="btn btn-primary w-full" [disabled]="pending()">
           @if (pending()) {
-            <svg
-              class="animate-spin"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3" opacity=".25" />
-              <path
-                d="M21 12a9 9 0 0 0-9-9"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="round"
-              />
-            </svg>
-            Signing in…
+          <svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3" opacity=".25" />
+            <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+          </svg>
+          Signing in…
           } @else {
-            Log in
+          Log in
           }
         </button>
 
         <p class="pt-1 text-center text-xs text-ink-muted">or</p>
 
-        <button
-          type="button"
-          class="btn btn-outline w-full opacity-60"
-          disabled
-          aria-disabled="true"
-          title="Demo — not implemented"
-        >
+        <button type="button" class="btn btn-outline w-full opacity-60" disabled aria-disabled="true"
+          title="Demo — not implemented">
           <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
-            <path
-              fill="currentColor"
+            <path fill="currentColor"
               d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.5 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.3l7.8 6.1C12.3 13.4 17.6 9.5 24 9.5Z"
-              opacity=".55"
-            />
-            <path
-              fill="currentColor"
+              opacity=".55" />
+            <path fill="currentColor"
               d="M46.5 24.5c0-1.6-.1-2.8-.4-4.1H24v8.1h12.7c-.3 2.1-1.6 5.2-4.6 7.3l7.5 5.8c4.4-4.1 6.9-10.1 6.9-17.1Z"
-              opacity=".85"
-            />
-            <path
-              fill="currentColor"
-              d="M10.4 28.6a14.5 14.5 0 0 1 0-9.2l-7.8-6.1a24 24 0 0 0 0 21.4l7.8-6.1Z"
-              opacity=".7"
-            />
-            <path
-              fill="currentColor"
+              opacity=".85" />
+            <path fill="currentColor" d="M10.4 28.6a14.5 14.5 0 0 1 0-9.2l-7.8-6.1a24 24 0 0 0 0 21.4l7.8-6.1Z"
+              opacity=".7" />
+            <path fill="currentColor"
               d="M24 48c6.5 0 11.9-2.1 15.6-5.8l-7.5-5.8c-2.1 1.4-4.9 2.4-8.1 2.4-6.4 0-11.7-3.9-13.6-9.3l-7.8 6.1C6.5 42.6 14.6 48 24 48Z"
-              opacity=".6"
-            />
+              opacity=".6" />
           </svg>
           Login with Google <span class="text-xs">(demo)</span>
         </button>
@@ -158,21 +98,14 @@
 
       <p class="mt-6 text-sm text-ink-muted">
         Don't have an account?
-        <button
-          type="button"
-          class="font-medium text-ink-muted opacity-60"
-          disabled
-          aria-disabled="true"
-          title="Demo — not implemented"
-        >
+        <button type="button" class="font-medium text-ink-muted opacity-60" disabled aria-disabled="true"
+          title="Demo — not implemented">
           Sign up
         </button>
       </p>
 
-      <p
-        class="mt-6 rounded-xl border px-3 py-2 text-xs text-ink-muted"
-        style="border-color: var(--line); background: var(--surface)"
-      >
+      <p class="mt-6 rounded-xl border px-3 py-2 text-xs text-ink-muted"
+        style="border-color: var(--line); background: var(--surface)">
         Demo credentials —
         <span class="font-semibold" style="color: var(--ink)">emilys</span> /
         <span class="font-semibold" style="color: var(--ink)">emilyspass</span>
@@ -181,10 +114,8 @@
   </div>
 
   <!-- Editorial panel (≥lg) -->
-  <aside
-    class="relative hidden overflow-hidden lg:flex lg:flex-col lg:justify-between"
-    style="background: var(--accent-bg); color: #fff"
-  >
+  <aside class="relative hidden overflow-hidden lg:flex lg:flex-col lg:justify-between"
+    style="background: var(--accent-bg); color: #fff">
     <div class="p-12">
       <p class="font-display text-7xl font-extrabold leading-[0.85] tracking-tight">
         Shop<br />Flow
@@ -201,7 +132,7 @@
         <li>Eyewear &amp; apparel</li>
       </ul>
       <p class="mt-8 text-xs" style="color: rgba(255, 255, 255, 0.85)">
-        © 2024 ShopFlow — demo project.
+        © 2026 ShopFlow — demo project.
       </p>
     </div>
   </aside>
